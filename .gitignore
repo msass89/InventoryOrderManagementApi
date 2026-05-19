@@ -1,0 +1,64 @@
+
+# === Konfigurationsdateien ===
+InventoryManagementApp/appsettings.json
+InventoryManagementApp/appsettings.Development.json
+InventoryManagementApp/Properties/launchSettings.json
+
+# === Build- und Ausgabeverzeichnisse ===
+bin/
+obj/
+out/
+TestResults/
+publish/
+artifacts/
+
+# === IDE-spezifische Dateien ===
+# Visual Studio
+.vs/
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.sln.ide
+*.user
+# Rider
+.idea/
+*.sln.iml
+# VS Code
+.vscode/
+
+# === Paketverwaltung ===
+packages/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+
+# === Webprojekte ===
+InventoryManagementApp/wwwroot/lib/
+
+# === ASP.NET Scaffolding ===
+ScaffoldingReadMe.txt
+
+# === Logs und temporäre Dateien ===
+*.log
+logs/
+*.tmp
+*.temp
+
+# === Datenbanken und Backups ===
+*.dbmdl
+*.bak
+*.backup
+
+# === Debug/Analyse/Tools ===
+_ReSharper*/
+*.DotSettings.user
+*.pidb
+*.svclog
+*.pdb
+*.cache
+
+# === Sonstiges ===
+*.ide
+*.orig
