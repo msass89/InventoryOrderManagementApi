@@ -1,8 +1,8 @@
 
 # === Konfigurationsdateien ===
-InventoryManagementApp/appsettings.json
-InventoryManagementApp/appsettings.Development.json
-InventoryManagementApp/Properties/launchSettings.json
+Backend/appsettings.json
+Backend/appsettings.Development.json
+Backend/Properties/launchSettings.json
 
 # === Build- und Ausgabeverzeichnisse ===
 bin/
@@ -35,7 +35,7 @@ project.lock.json
 project.fragment.lock.json
 
 # === Webprojekte ===
-InventoryManagementApp/wwwroot/lib/
+Backend/wwwroot/lib/
 
 # === ASP.NET Scaffolding ===
 ScaffoldingReadMe.txt
