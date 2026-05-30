@@ -13,7 +13,7 @@ public static class InventorySeed
                 {
                     Name = "Pallet Jack",
                     Quantity = 12,
-                    Location = "Warehouse A"
+                    Location = "WarehouseA"
                 });
 
                 context.SaveChanges();
@@ -23,7 +23,7 @@ public static class InventorySeed
             var items = context.InventoryItems.ToList();
             foreach (var item in items)
             {
-                item.DisplayInfo(); // Should print: Item: Pallet Jack | Quantity: 12 | Location: Warehouse A
+                item.DisplayInfo(); // Should print: Item: Pallet Jack | Quantity: 12 | Location: WarehouseA
             }
         }
     }

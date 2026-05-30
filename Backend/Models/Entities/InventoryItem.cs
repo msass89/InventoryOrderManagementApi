@@ -15,7 +15,7 @@ namespace InventoryManagement.Models
         [DefaultValue(0)]
         public int Quantity { get; set; }
 
-        [MaxLength(100)]
+        [EnumDataType(typeof(InventoryLocation))]
         public string Location { get; set; }
 
         public void DisplayInfo()

@@ -14,18 +14,18 @@ namespace InventoryManagement.Models
 
         // Set default value to current date and time when the order is created
         [DefaultValue(typeof(DateTime), "DateTime.Now")]
-        public DateTime DatePlaced { get; set; }
+        public DateTime? DatePlaced { get; set; }
 
-        // Navigation property to link orders with inventory items
-        public ICollection<InventoryItem> Items { get; set; }
+        // Navigation property to link orders with order items
+        public ICollection<OrderItem> OrderItems { get; set; }
 
         public void GetOrderSummary()
         {
             Console.WriteLine($"Order ID: {OrderId}, Customer: {CustomerName}, Date: {DatePlaced}");
             Console.WriteLine("Items in Order:");
-            if (Items != null)
+            if (OrderItems != null)
             {
-                foreach (var item in Items)
+                foreach (var item in OrderItems)
                 {
                     item.DisplayInfo();
                 }
@@ -36,23 +36,23 @@ namespace InventoryManagement.Models
             }
         }
 
-        public void AddItem(InventoryItem item)
+        public void AddOrderItem(OrderItem orderItem)
         {
-            if (Items == null)
+            if (OrderItems == null)
             {
                 // Initialize the collection if it's null before adding items
-                Items = new List<InventoryItem>();
+                OrderItems = new List<OrderItem>();
             }
-            Items.Add(item);
+            OrderItems.Add(orderItem);
         }
 
         public void RemoveItem(int ItemId)
         {
-            var item = Items?.FirstOrDefault(i => i.ItemId == ItemId);
+            var item = OrderItems?.FirstOrDefault(i => i.InventoryItemId == ItemId);
 
             if (item != null)
             {
-                Items.Remove(item);
+                OrderItems.Remove(item);
             }
         }
     }

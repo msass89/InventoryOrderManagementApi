@@ -13,4 +13,5 @@ public class ApplicationDbContext : DbContext
     // create tables for InventoryItem and Order
     public DbSet<InventoryItem> InventoryItems { get; set; }
     public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderItem> OrderItems { get; set; }
 }
