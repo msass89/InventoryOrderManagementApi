@@ -1,8 +1,8 @@
 
 # === Konfigurationsdateien ===
-Backend/appsettings.json
-Backend/appsettings.Development.json
-Backend/Properties/launchSettings.json
+API/appsettings.json
+API/appsettings.Development.json
+API/Properties/launchSettings.json
 
 # === Build- und Ausgabeverzeichnisse ===
 bin/
@@ -50,6 +50,9 @@ logs/
 *.dbmdl
 *.bak
 *.backup
+*.db
+*.db-shm
+*.db-wal
 
 # === Debug/Analyse/Tools ===
 _ReSharper*/
