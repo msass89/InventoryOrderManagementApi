@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using InventoryManagement.Models;
+using InventoryManagementApi.Models;
 
 [ApiController]
 [Route("api/inventory")]

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace InventoryManagement.Models
+namespace InventoryManagementApi.Models
 {
     // DTO for returning order details
     public class OrderResponseDto

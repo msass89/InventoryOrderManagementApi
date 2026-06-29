@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace InventoryManagement.Models
+namespace InventoryManagementApi.Models
 {
     // DTO for creating a new inventory item, including name and quantity
     public class CreateItemDto

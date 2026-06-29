@@ -1,4 +1,4 @@
-using InventoryManagement.Models;
+using InventoryManagementApi.Models;
 
 public static class InventorySeed
 {

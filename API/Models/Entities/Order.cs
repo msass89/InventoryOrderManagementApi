@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 
 
-namespace InventoryManagement.Models
+namespace InventoryManagementApi.Models
 {
     public class Order    
     {

@@ -1,13 +1,19 @@
 using Microsoft.EntityFrameworkCore;
-using InventoryManagement.Models;
+using InventoryManagementApi.Models;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     // constructor to pass options to the base DbContext
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
         
+    }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
     }
 
     // create tables for InventoryItem and Order

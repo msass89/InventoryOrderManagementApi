@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace InventoryManagement.Models
+namespace InventoryManagementApi.Models
 {
     public class InventoryItem
     {   

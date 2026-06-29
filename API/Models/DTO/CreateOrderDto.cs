@@ -1,7 +1,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace InventoryManagement.Models
+namespace InventoryManagementApi.Models
 {
     // DTO for creating a new order, including customer name and list of order items
     public class CreateOrderDto
