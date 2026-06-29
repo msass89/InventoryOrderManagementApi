@@ -58,6 +58,14 @@ using (var scope = app.Services.CreateScope())
     await InventorySeed.SeedInventoryAsync(services);
 }
 
+// Seed Identity Roles into the database
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    await IdentityRolesSeed.SeedRolesAsync(services);
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

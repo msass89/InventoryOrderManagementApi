@@ -25,6 +25,9 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> CreateUserAsync(string email, string password, string roleName)
     {
+        if(string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+            return BadRequest("Email and password should not be empty.");
+
         var user = new ApplicationUser { UserName = email, Email = email };
 
         // Password is hashed automatically by identity
@@ -33,14 +36,12 @@ public class AuthController : ControllerBase
         if(!createUserResult.Succeeded)
             return BadRequest(createUserResult.Errors);
 
-        /*var addRoleResult = _userManager.AddToRoleAsync(user, roleName);
+        var addRoleResult = _userManager.AddToRoleAsync(user, roleName);
 
         if(!addRoleResult.IsCompletedSuccessfully)
-            return BadRequest($"Failed to add a role to the user {user.UserName}");*/
+            return BadRequest($"Failed to add a role to the user {user.UserName}. Roles should be 'Admin', 'SalesAgent', 'InventoryAgent', 'Customer'.");
 
-        //return Ok($"User '{email}' created and assigned to role '{roleName}'.");
-
-        return Ok($"User '{email}' created.");
+        return Ok($"User '{email}' created and assigned to role '{roleName}'.");
     }
 
     [HttpPost("login")]
@@ -48,19 +49,25 @@ public class AuthController : ControllerBase
         {
             // searches for user by email and returns unauthorized, if not found
             var user = await _userManager.FindByEmailAsync(email);
-            if (user == null) return Results.Unauthorized();
+            
+            if (user == null) 
+                return Results.Unauthorized();
 
             // check for user password and returns unauthorized, if not matching
             if (!await _userManager.CheckPasswordAsync(user, password))
                 return Results.Unauthorized();
 
-            // Create JWT
-            var claims = new[]
+            var rolesOfUser = await _userManager.GetRolesAsync(user);
+
+            // Create JWT claims
+            var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
+
+            claims.AddRange(rolesOfUser.Select(role => new Claim(ClaimTypes.Role, role)));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
