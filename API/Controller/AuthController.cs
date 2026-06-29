@@ -36,9 +36,9 @@ public class AuthController : ControllerBase
         if(!createUserResult.Succeeded)
             return BadRequest(createUserResult.Errors);
 
-        var addRoleResult = _userManager.AddToRoleAsync(user, roleName);
+        var addRoleResult = await _userManager.AddToRoleAsync(user, roleName);
 
-        if(!addRoleResult.IsCompletedSuccessfully)
+        if(!addRoleResult.Succeeded)
             return BadRequest($"Failed to add a role to the user {user.UserName}. Roles should be 'Admin', 'SalesAgent', 'InventoryAgent', 'Customer'.");
 
         return Ok($"User '{email}' created and assigned to role '{roleName}'.");
@@ -67,9 +67,11 @@ public class AuthController : ControllerBase
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
+            // add user roles to claims
             claims.AddRange(rolesOfUser.Select(role => new Claim(ClaimTypes.Role, role)));
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
+            // create a JWT Token
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
     
             var token = new JwtSecurityToken(

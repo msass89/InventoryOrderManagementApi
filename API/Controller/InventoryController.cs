@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using InventoryManagementApi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Route("api/inventory")]
@@ -14,6 +15,7 @@ public class InventoryController : ControllerBase
 
     //get all inventory items
     [HttpGet]
+    [Authorize(Roles = "Admin, InventoryAgent")]
     public IActionResult GetInventoryItems()
     {
         return Ok(context.InventoryItems.Select(item => new ItemResponseDto
@@ -27,6 +29,7 @@ public class InventoryController : ControllerBase
 
     //get a specific inventory item by id
     [HttpGet("{id}")]
+    [Authorize(Roles = "Admin, InventoryAgent")]
     public IActionResult GetInventoryItem(int id)
     {
         // get the database context from the request services
@@ -49,6 +52,7 @@ public class InventoryController : ControllerBase
 
     //create a new inventory item
     [HttpPost]
+    [Authorize(Roles = "Admin, InventoryAgent")]
     public IActionResult CreateInventoryItem([FromBody] CreateItemDto createItemDto)
     {
         if (!ModelState.IsValid)
@@ -78,6 +82,7 @@ public class InventoryController : ControllerBase
 
     //delete an inventory item by id
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin, InventoryAgent")]
     public IActionResult DeleteInventoryItem(int id)
     {
         var item = context.InventoryItems.FirstOrDefault(item => item.ItemId == id);

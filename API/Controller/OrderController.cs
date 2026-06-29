@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using InventoryManagementApi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Route("api/orders")]
@@ -14,6 +15,7 @@ public class OrderController : ControllerBase
 
     //get all orders
     [HttpGet]
+    [Authorize(Roles = "Admin, SalesAgent")]
     public IActionResult GetOrders()
     {
         // get the database context from the request services and return a list of DTOs
@@ -37,6 +39,7 @@ public class OrderController : ControllerBase
 
     //get a specific order by id
     [HttpGet("{id}")]
+    [Authorize(Roles = "Admin, SalesAgent")]
     public IActionResult GetOrder(int id)
     {
         // get the database context from the request services and return a DTO
@@ -64,6 +67,7 @@ public class OrderController : ControllerBase
 
     //create a new order with validation 
     [HttpPost]
+    [Authorize(Roles = "Customer")]
     public IActionResult CreateOrder([FromBody] CreateOrderDto createOrderDto)
     {
         // Validate the incoming DTO 
@@ -121,6 +125,7 @@ public class OrderController : ControllerBase
 
     //delete an order by id
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin, SalesAgent, Customer")]
     public IActionResult DeleteOrder(int id)
     {
         var order = context.Orders.FirstOrDefault(o => o.OrderId == id);
