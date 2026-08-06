@@ -42,8 +42,20 @@ builder.Services.AddSwaggerGen( options =>
 });
 
 // Add the ApplicationDbContext to the services container with SQLite configuration
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite("Data Source=InventoryManagement.db"));
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlite("Data Source=InventoryManagement.db"));
+}
+else
+{
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+}
+
+
+// Add memory caching services to the service container
+builder.Services.AddMemoryCache();  
 
 // Add Identiy to the service container using EntityFramework and DefaultTokenProvider
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -90,6 +102,7 @@ builder.Services.AddAuthentication( options => {
             }
         };
     });
+  
 
 var app = builder.Build();
 
@@ -98,27 +111,26 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
 
-    await InventorySeed.SeedInventoryAsync(services);
-}
+    var db = services.GetRequiredService<ApplicationDbContext>();
 
-// Seed Identity Roles into the database
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
+    // Apply pending migrations
+    await db.Database.MigrateAsync();
 
-    await IdentityRolesSeed.SeedRolesAsync(services);
+    // Seed Identity roles
+    //await IdentityRolesSeed.SeedRolesAsync(services);
+
+    // Seed inventory data
+    //await InventorySeed.SeedInventoryAsync(services);
 }
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(options =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Inventory Management API V1");
-        options.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
-    });
-}
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Inventory Management API V1");
+    options.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
+});
+
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

@@ -10,14 +10,11 @@ using System.Text;
 [Route("api/auth")]
 public class AuthController : ControllerBase
 {
-
-    private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IConfiguration _configuration;
 
-    public AuthController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IConfiguration configuration)
+    public AuthController(UserManager<ApplicationUser> userManager, IConfiguration configuration)
     {
-        _signInManager = signInManager;
         _userManager = userManager;
         _configuration = configuration;
     }
