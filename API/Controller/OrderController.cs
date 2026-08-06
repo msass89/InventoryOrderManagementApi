@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using InventoryManagementApi.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 [ApiController]
 [Route("api/orders")]
@@ -20,7 +21,9 @@ public class OrderController : ControllerBase
     {
         // get the database context from the request services and return a list of DTOs
         List<OrderResponseDto> orders = context.Orders
-            .Select(o => new OrderResponseDto
+            .Include(o => o.OrderItems) // Include the related OrderItems
+                .ThenInclude(oi => oi.InventoryItem) // Include the related InventoryItem for each OrderItem
+            .Select(o => new OrderResponseDto // Map each Order to an OrderResponseDto
             {
                 OrderId = o.OrderId,
                 CustomerName = o.CustomerName,
@@ -29,21 +32,23 @@ public class OrderController : ControllerBase
                 OrderItemResponseDto = o.OrderItems.Select(orderItem => new OrderItemResponseDto
                 {
                     InventoryItemId = orderItem.InventoryItemId,
-                    ItemName = orderItem.InventoryItem != null ? orderItem.InventoryItem.Name : null,
+                    ItemName = orderItem.InventoryItem != null ? orderItem.InventoryItem.Name : string.Empty,
                     Quantity = orderItem.Quantity
                 }).ToList()
-            })
-            .ToList();
+            }).ToList();
+            
         return Ok(orders);
     }
 
     //get a specific order by id
     [HttpGet("{id}")]
     [Authorize(Roles = "Admin, SalesAgent")]
-    public IActionResult GetOrder(int id)
+    public async Task<IActionResult> GetOrder(int id)
     {
         // get the database context from the request services and return a DTO
         OrderResponseDto? order = context.Orders
+            .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.InventoryItem)
             .Where(o => o.OrderId == id)
             .Select(o => new OrderResponseDto
             {
@@ -53,7 +58,7 @@ public class OrderController : ControllerBase
                 OrderItemResponseDto = o.OrderItems.Select(oi => new OrderItemResponseDto
                 {
                     InventoryItemId = oi.InventoryItemId,
-                    ItemName = oi.InventoryItem != null ? oi.InventoryItem.Name : null,
+                    ItemName = oi.InventoryItem != null ? oi.InventoryItem.Name : string.Empty,
                     Quantity = oi.Quantity
                 }).ToList()
             })
@@ -68,7 +73,7 @@ public class OrderController : ControllerBase
     //create a new order with validation 
     [HttpPost]
     [Authorize(Roles = "Customer")]
-    public IActionResult CreateOrder([FromBody] CreateOrderDto createOrderDto)
+    public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDto createOrderDto)
     {
         // Validate the incoming DTO 
         if (!ModelState.IsValid)
@@ -116,7 +121,7 @@ public class OrderController : ControllerBase
             OrderItemResponseDto = order.OrderItems.Select(oi => new OrderItemResponseDto
             {
                 InventoryItemId = oi.InventoryItemId,
-                ItemName = inventoryItems.FirstOrDefault(ii => ii.ItemId == oi.InventoryItemId)?.Name,
+                ItemName = inventoryItems.FirstOrDefault(ii => ii.ItemId == oi.InventoryItemId)?.Name ?? string.Empty,
                 Quantity = oi.Quantity
             }).ToList()
         };
@@ -126,9 +131,9 @@ public class OrderController : ControllerBase
     //delete an order by id
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin, SalesAgent, Customer")]
-    public IActionResult DeleteOrder(int id)
+    public async Task<IActionResult> DeleteOrder(int id)
     {
-        var order = context.Orders.FirstOrDefault(o => o.OrderId == id);
+        var order = await context.Orders.FirstOrDefaultAsync(o => o.OrderId == id);
         if (order == null)
         {
             return NotFound();
