@@ -123,9 +123,10 @@ public class InventoryController : ControllerBase
             QuantityInStock = inventoryItem.Quantity,
             Location = inventoryItem.Location
         };
-        
+
         // invalidate cached inventory list after creating a new item
         _memoryCache.Remove(CacheKeyInventoryItems);
+
         return CreatedAtAction(nameof(GetInventoryItem), new { id = inventoryItem.ItemId }, itemResponseDto);
     }
 
@@ -144,6 +145,7 @@ public class InventoryController : ControllerBase
 
         // invalidate cached inventory list after deleting an item
         _memoryCache.Remove(CacheKeyInventoryItems);
+        
         return Ok($"Inventory item with ID {id} deleted successfully.");
     }
 }
