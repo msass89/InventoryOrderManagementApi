@@ -30,6 +30,7 @@ public class OrderController : ControllerBase
 
             // If the cache does not contain the orders, retrieve them from the database
             cachedOrders = await _context.Orders
+                .AsNoTracking()
                 .Include(o => o.OrderItems) // Include the related OrderItems
                     .ThenInclude(oi => oi.InventoryItem) // Include the related InventoryItem for each OrderItem
                 .Select(o => new OrderResponseDto // Map each Order to an OrderResponseDto
@@ -57,23 +58,6 @@ public class OrderController : ControllerBase
         {
             Console.WriteLine("Cache hit: Retrieving orders from cache.");
         }
-        // get the database context from the request services and return a list of DTOs
-        /*List<OrderResponseDto> orders = await _context.Orders
-            .Include(o => o.OrderItems) // Include the related OrderItems
-                .ThenInclude(oi => oi.InventoryItem) // Include the related InventoryItem for each OrderItem
-            .Select(o => new OrderResponseDto // Map each Order to an OrderResponseDto
-            {
-                OrderId = o.OrderId,
-                CustomerName = o.CustomerName,
-                DatePlaced = o.DatePlaced,
-                // Map order items to their corresponding DTOs, including item names
-                OrderItemResponseDto = o.OrderItems.Select(orderItem => new OrderItemResponseDto
-                {
-                    InventoryItemId = orderItem.InventoryItemId,
-                    ItemName = orderItem.InventoryItem != null ? orderItem.InventoryItem.Name : string.Empty,
-                    Quantity = orderItem.Quantity
-                }).ToList()
-            }).ToListAsync();*/
             
         return Ok(cachedOrders);
     }
@@ -89,6 +73,7 @@ public class OrderController : ControllerBase
 
             // get the database context from the request services and return a DTO
             OrderResponseDto? order = await _context.Orders
+                .AsNoTracking()
                 .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.InventoryItem)
                 .Where(o => o.OrderId == id)

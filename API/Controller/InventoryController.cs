@@ -3,7 +3,6 @@ using InventoryManagementApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using System;
 
 [ApiController]
 [Route("api/inventory")]
@@ -30,13 +29,15 @@ public class InventoryController : ControllerBase
             Console.WriteLine("Cache miss: Retrieving inventory items from database and caching them.");
 
             // If the cache does not contain the inventory items, retrieve them from the database
-            var items = await _context.InventoryItems.Select(item => new ItemResponseDto
-            {
-                InventoryItemId = item.ItemId,
-                ItemName = item.Name,
-                QuantityInStock = item.Quantity,
-                Location = item.Location
-            }).ToListAsync();
+            var items = await _context.InventoryItems
+                .AsNoTracking() // Use AsNoTracking for read-only queries to improve performance
+                .Select(item => new ItemResponseDto
+                {
+                    InventoryItemId = item.ItemId,
+                    ItemName = item.Name,
+                    QuantityInStock = item.Quantity,
+                    Location = item.Location
+                }).ToListAsync();
 
             // Set cache options
             var cacheEntryOptions = new MemoryCacheEntryOptions()
@@ -66,6 +67,7 @@ public class InventoryController : ControllerBase
 
             // get the database context from the request services
             var itemResponseDto = await _context.InventoryItems
+                .AsNoTracking()
                 .Where(i => i.ItemId == id)
                 .Select(item => new ItemResponseDto
                 {
@@ -145,7 +147,7 @@ public class InventoryController : ControllerBase
 
         // invalidate cached inventory list after deleting an item
         _memoryCache.Remove(CacheKeyInventoryItems);
-        
+
         return Ok($"Inventory item with ID {id} deleted successfully.");
     }
 }
