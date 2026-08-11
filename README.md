@@ -8,6 +8,7 @@ Inventory-Order-Management-Api
 - Swagger/OpenAPI-Documentation
 - JWT-Authentification
 - Role Based Access Control (RBAC)
+- InMemory-Caching
 
 ## Technologies
 
