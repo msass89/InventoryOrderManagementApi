@@ -120,10 +120,10 @@ using (var scope = app.Services.CreateScope())
     await db.Database.MigrateAsync();
 
     // Seed Identity roles
-    //await IdentityRolesSeed.SeedRolesAsync(services);
+    await IdentityRolesSeed.SeedRolesAsync(services);
 
     // Seed inventory data
-    //await InventorySeed.SeedInventoryAsync(services);
+    await InventorySeed.SeedInventoryAsync(services);
 }
 
 // Configure the HTTP request pipeline.
