@@ -41,17 +41,20 @@ builder.Services.AddSwaggerGen( options =>
         });
 });
 
-// Add the ApplicationDbContext to the services container with SQLite configuration
-if (builder.Environment.IsDevelopment())
+// Add the ApplicationDbContext to the services container using the environment-specific connection string
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlite("Data Source=InventoryManagement.db"));
-}
-else
-{
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-}
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+    if (builder.Environment.IsDevelopment())
+    {
+        options.UseSqlite(connectionString);
+    }
+    else
+    {
+        options.UseSqlServer(connectionString);
+    }
+});
 
 
 // Add memory caching services to the service container
@@ -117,10 +120,10 @@ using (var scope = app.Services.CreateScope())
     await db.Database.MigrateAsync();
 
     // Seed Identity roles
-    await IdentityRolesSeed.SeedRolesAsync(services);
+    //await IdentityRolesSeed.SeedRolesAsync(services);
 
     // Seed inventory data
-    await InventorySeed.SeedInventoryAsync(services);
+    //await InventorySeed.SeedInventoryAsync(services);
 }
 
 // Configure the HTTP request pipeline.
