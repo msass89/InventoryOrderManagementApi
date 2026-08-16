@@ -2,6 +2,10 @@
 
 Inventory-Order-Management-Api
 
+## LIVE-DEMO ON MONSTERASP.NET
+
+https://inventoryordermanagementapi.runasp.net/index.html
+
 ## Features
 
 - RESTful API
@@ -9,6 +13,7 @@ Inventory-Order-Management-Api
 - JWT-Authentification
 - Role Based Access Control (RBAC)
 - InMemory-Caching
+- Deployment on monsterasp.net
 
 ## Technologies
 
@@ -16,7 +21,7 @@ Inventory-Order-Management-Api
 - Entity Framework Core
 - ASP.NET Core Identity
 - Swagger / OpenAPI
-- Sqlite in Development Environment
+- Sqlite
 
 ## How to run the API on your local machine
 
