@@ -46,14 +46,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-    if (builder.Environment.IsDevelopment())
-    {
-        options.UseSqlite(connectionString);
-    }
-    else
-    {
-        options.UseSqlServer(connectionString);
-    }
+    options.UseSqlite(connectionString);
 });
 
 
