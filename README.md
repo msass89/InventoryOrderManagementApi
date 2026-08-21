@@ -89,9 +89,16 @@ The swagger UI is set to the root and is starting automatically when running the
 ## Authentification and Authorization
 
 This API is secured by JWT authentification and RBAC-based authorizaiton.
-Roles are 'Admin', 'SalesAgent', 'InventoryAgent', 'Customer'.
-For accessing the endpoints register as a new user by providing a (fake) email adress, a password and the role.
-The API is responding with a Bearer token. You can copy this token and paste in into the input field appearing when clicking on 'Authorize' on the upper right corner of the Swagger UI.
+
+For accessing the endpoints please follow these steps:
+
+1. Use the endpoint 'api/auth/register' to register as a new user by providing a (fake) email adress, a password and the role. Possible roles are 'Admin', 'SalesAgent', 'InventoryAgent' or 'Customer'.
+2. Use the endpoint 'api/auth/login' in order to login with your provided user name and credentials.
+3. Copy the token in the API response without the parentheses.
+4. Click on 'Authorize' on the upper right corner of the Swagger UI.
+5. Paste the copied token into the input field.
+6. Confirm by clicking on 'Authorize'.
+
 Now you are able to access the secured endpoints according to the user role.
 
 ## Projectstructure
